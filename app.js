@@ -30,7 +30,6 @@ const resetGame = () => {
 
 boxes.forEach((box) => {
     box.addEventListener("click", () => {
-        console.log("Box is clicked");
         if(turnO) {
             //turn of player O
             box.style.color = "#F95738";
@@ -67,19 +66,28 @@ const enableBoxes = ()=> {
 };
 
 const showWinner = (winner) => {
-    msg.innerText = `Congratulations, Winner is ${winner}`;
-    msgContainer.classList.remove("hide");
     disableBoxes();
-    resetBtn.style.display = "none";
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            msg.innerText = `Congratulations, Winner is ${winner}`;
+            msgContainer.classList.remove("hide");
+            resetBtn.style.display = "none";
+            resolve("success!");
+        }, 1000);
+    }); 
 };
 
 const showDraw = () => {
-    msg.innerText = "Match is Draw!";
-    msgContainer.classList.remove("hide");
-    resetBtn.style.display = "none";
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            msg.innerText = "Match is Draw!";
+            msgContainer.classList.remove("hide");
+            resetBtn.style.display = "none";
+        }, 1000);
+    });
 }
 
-const checkWinner = () => {
+const checkWinner = async () => {
     for(let pattern of winPatterns) {
         let pos1Val = boxes[pattern[0]].innerText;
         let pos2Val = boxes[pattern[1]].innerText;
@@ -87,8 +95,7 @@ const checkWinner = () => {
 
         if(pos1Val != "" && pos2Val != "" && pos3Val != "")
             if(pos1Val === pos2Val && pos2Val === pos3Val) {
-                console.log("Winner", pos1Val);
-                showWinner(pos1Val);
+                await showWinner(pos1Val);
                 count = 0;
             }
     }
